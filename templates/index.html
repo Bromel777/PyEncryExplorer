@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Encry Blockchain Explorer</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+</head>
+<body>
+
+    <nav class="navbar navbar-inverse bg-primary">
+      <a class="navbar-brand" href="#">
+        Encry Explorer
+      </a>
+    </nav>
+
+    <div class="container-fluid" style="padding-top: 40px">
+        <div class="row">
+            <div class="col-sm-9">
+                <h2>Latest Blocks</h2>
+                <table class="table table-striped" id="blocks">
+                    <thead>
+                        <tr>
+                            <th>Height</th>
+                            <th>Hash</th>
+                            <th>Timestamp</th>
+                            <th>Difficulty</th>
+                        </tr>
+                    </thead>
+                    <tbody id="blocks_container">
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-3">
+                <h2>Info</h2>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Algo:</th>
+                            <td>POW</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Current height</th>
+                            <td id="height-cell">-</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Difficulty</th>
+                            <td id="diff-cell">-</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Unconfirmed</th>
+                            <td id="uncc-cell">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+    <script type="application/javascript">
+
+        const protocol = "http://";
+        var nodes = ["127.0.0.1:9051"];
+        var useNodeIdx = 0;
+        var loadedBlocksIds = [];
+
+        function in_array(value, array) {
+            for (var i = 0; i < array.length; i++) {
+                    if (array[i] == value) return true;
+            }
+            return false;
+        }
+
+        function fetchBlocks() {
+            $.getJSON(protocol + nodes[useNodeIdx] + '/history/lastHeaders/20/', function(data) {
+                $.each(data, function (index, element) {
+                    loadedBlocksIds.push(element.id);
+                    var elem = '<tr><th scope="row">' + element.height + '</th><td>' + element.hash +
+                        '</td><td>' + element.timestamp + '</td><td>' + element.difficulty + '</td></tr>';
+                    $("#blocks_container").prepend(elem);
+                });
+            });
+        }
+
+        function fetchLastBlocks() {
+            $.getJSON(protocol + nodes[useNodeIdx] + '/history/lastHeaders/3/', function(data) {
+                $.each(data, function (index, element) {
+                    if (!in_array(element.id, loadedBlocksIds)) {
+                        loadedBlocksIds.push(element.id);
+                        var elem = '<tr><th scope="row">' + element.height + '</th><td>' + element.hash +
+                            '</td><td>' + element.timestamp + '</td><td>' + element.difficulty + '</td></tr>';
+                        $("#blocks_container").prepend(elem);
+                    }
+                });
+            });
+        }
+
+        function fetchInfo() {
+            $.getJSON(protocol + nodes[useNodeIdx] + '/info', function(data) {
+                $.each(data, function (index, element) {
+                    $("#height-cell").empty().append(data.fullHeight);
+                    $("#diff-cell").empty().append(data.difficulty);
+                    $("#uncc-cell").empty().append('~' + data.unconfirmedCount);
+                });
+            });
+        }
+
+        $(document).ready(function (){
+
+            fetchBlocks();
+            fetchInfo();
+
+            setInterval(function () {
+                fetchLastBlocks();
+                fetchInfo();
+            }, 10000)
+        })
+    </script>
+</body>
+</html>
