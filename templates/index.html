@@ -3,17 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Encry Blockchain Explorer</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <style>
+        .bd-footer {
+            padding: 2rem 0 1rem;
+            margin-top: 4rem;
+            font-size: 85%;
+            text-align: center;
+            background-color: #f7f7f7
+        }
+    </style>
 </head>
 <body>
 
     <nav class="navbar navbar-inverse bg-primary">
       <a class="navbar-brand" href="#">
-        Encry Explorer
+        Encry Blockchain Explorer (Testnet)
       </a>
     </nav>
 
-    <div class="container-fluid" style="padding-top: 40px">
+    <div class="container-fluid" style="padding-top:40px;min-height:600px;">
         <div class="row">
             <div class="col-sm-9">
                 <h2>Latest Blocks</h2>
@@ -48,7 +58,7 @@
                             <td id="diff-cell">-</td>
                         </tr>
                         <tr>
-                            <th scope="row">Unconfirmed</th>
+                            <th scope="row">Unconfirmed TXS</th>
                             <td id="uncc-cell">-</td>
                         </tr>
                     </tbody>
@@ -57,6 +67,12 @@
         </div>
     </div>
 
+    <footer class="bd-footer text-muted">
+        <div class="container">
+            <p>Designed and built by EncryCore team.</p>
+        </div>
+    </footer>
+
     <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
@@ -64,7 +80,7 @@
     <script type="application/javascript">
 
         const protocol = "http://";
-        var nodes = ["127.0.0.1:9051"];
+        var nodes = ["172.16.10.55:9051", "172.16.10.56:9051", "172.16.10.57:9051", "172.16.10.58:9051"];
         var useNodeIdx = 0;
         var loadedBlocksIds = [];
 
